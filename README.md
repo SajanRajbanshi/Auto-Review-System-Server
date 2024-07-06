@@ -6,6 +6,7 @@ This one is the backend for that application.
 ## Prerequisite
 - Your should have Node.js installed in your system.
 - NPM is required to install dependencies
+- GIT has to be installed for git commands
 
 ## How to install?
 This backend is not hosted in live server. To use it, you will have to install in your local mechine and run it. Follow the following steps to install in your local.
