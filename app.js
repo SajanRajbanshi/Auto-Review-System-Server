@@ -42,10 +42,28 @@ async function analyse(text) {
   );
 }
 
+async function isUserNameAvailable(username) {
+  try {
+    const userDb = await mongoose.createConnection(userUri).asPromise();
+    const data = await userDb.db
+      .collection("users")
+      .find({ username: username })
+      .toArray();
+    if (data.length === 0) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (err) {
+    console.log("error during validating username", err);
+    return false;
+  }
+}
+
 async function writeUserData(userInfo) {
   try {
-    let status = await findUser(userInfo);
-    if (status === true) {
+    let status = await isUserNameAvailable(userInfo.username);
+    if (status === false) {
       console.log("user already exist");
       return false;
     }
@@ -57,6 +75,7 @@ async function writeUserData(userInfo) {
     return true;
   } catch (err) {
     console.log("error occured during writing new user", err);
+    return false;
   }
 }
 
@@ -75,6 +94,7 @@ async function findUser(userInfo) {
     }
   } catch (err) {
     console.log("someting went wrong while searching", err);
+    return false;
   }
 }
 
@@ -106,22 +126,22 @@ async function writeProcessedData(dataArray) {
 
 // to read from processed data
 async function readProcessedData() {
-  try{
-    const readDB = await mongoose.createConnection(processedDataUri).asPromise();
+  try {
+    const readDB = await mongoose
+      .createConnection(processedDataUri)
+      .asPromise();
     const collect = readDB.db.collection("processeddatas");
     const dataArray = await collect.find({}).toArray();
     return dataArray;
-  }
-  catch(err)
-  {
-    console.log("error in reading processed data",err);
+  } catch (err) {
+    console.log("error in reading processed data", err);
     return err;
   }
 }
 
 // to write in content database
 async function writeContentData(dataArray) {
-  try{
+  try {
     const writeDB = await mongoose.createConnection(contentUri).asPromise();
     const contentData = writeDB.model("content", contentDataSchema);
     let count = 0;
@@ -139,10 +159,8 @@ async function writeContentData(dataArray) {
       count += 1;
     }
     console.log("data wrote");
-  }
-  catch(err)
-  {
-    console.log("error in writing content data",err);
+  } catch (err) {
+    console.log("error in writing content data", err);
   }
 }
 
@@ -158,23 +176,19 @@ app.use(cors());
 // app.use(bodyparser.urlencoded({ extended: true }));
 app.use(express.json());
 
-app.get("/",async (req,res)=>
-{ 
-  try{
-    res.status(200).send({status:"server is actively listening"});
+app.get("/", async (req, res) => {
+  try {
+    res.status(200).send({ status: "server is actively listening" });
+  } catch (err) {
+    console.log("application having issue", err);
+    res.status(500).send({ error: "server not active" });
   }
-  catch(err)
-  {
-    console.log("application having issue",err);
-    res.status(500).send({error:"server not active"});
-  }
-})
+});
 
 // the below api will be used for
 // accessing top positive, top negatives
 app.get("/api/data/:source/:sentiment/:count", async (req, res) => {
-  try
-  {
+  try {
     let source = req.params.source;
     let sentiment = req.params.sentiment;
     let count = req.params.count;
@@ -195,10 +209,8 @@ app.get("/api/data/:source/:sentiment/:count", async (req, res) => {
       });
     }
     res.status(200).send(dataArray.slice(0, count));
-  }
-  catch(err)
-  {
-    console.log("error in api with params",err);
+  } catch (err) {
+    console.log("error in api with params", err);
   }
 });
 
