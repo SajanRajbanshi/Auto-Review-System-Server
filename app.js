@@ -246,14 +246,14 @@ app.get("/api/data/:source/:sentiment/:count", async (req, res) => {
         return item.source === source && item.sentiment > 0;
       });
       dataArray.sort((a, b) => {
-        return a.sentiment - b.sentiment;
+        return b.sentiment - a.sentiment;
       });
     } else {
       dataArray = dataArray.filter((item) => {
         return item.source === source && item.sentiment < 0;
       });
       dataArray.sort((a, b) => {
-        return b.sentiment - a.sentiment;
+        return a.sentiment - b.sentiment;
       });
     }
     res.status(200).send(dataArray.slice(0, count));
@@ -312,7 +312,7 @@ app.get("/api/data/top-content", async (req, res) => {
     const dataArray = await readProcessedContent();
     res.status(200).send(
       dataArray.sort((a, b) => {
-        return a.ratio - b.ratio;
+        return b.ratio - a.ratio;
       })
     );
   } catch (err) {
@@ -328,8 +328,12 @@ app.post("/auth/signup", async (req, res) => {
     let email = req.body.email;
     let userInfo = { email: email, username: username, password: password };
     let status = await writeUserData(userInfo);
-    if (status) {
+    if (status===true) {
       res.status(200).send({ status: status });
+    }
+    else
+    {
+      res.status(200).send({status:status});
     }
   } catch (err) {
     console.log("error in signup api", err);
