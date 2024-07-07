@@ -4,7 +4,7 @@
 Auto Review System is an web based application where user can track their social content profermance.
 This one is the backend for that application.
 ## Prerequisite
-- Your should have Node.js installed in your system.
+- You should have Node.js installed in your system.
 - NPM is required to install dependencies
 - GIT has to be installed to run git commands
 
@@ -51,7 +51,7 @@ This API can be used to get top positive and negative comments.
 ```
 http://localhost:3000/api/data/<source>/<sentiment>/<count>
 ```
-The above mentioned **<source>**, **<sentiment>** and **<count>** are place holder for their relevent options. Below are the options corresponding to these place holders.
+The above mentioned **source**, **sentiment** and **count** are place holders for their relevent options. Below are the options corresponding to these place holders.
 ##### source -> facebook, instagram, thread, twitter, all.
 ##### sentiment -> positive, negative
 ##### count -> number of data required
