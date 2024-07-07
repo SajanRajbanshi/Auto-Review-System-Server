@@ -52,9 +52,9 @@ This API can be used to get top positive and negative comments.
 http://localhost:3000/api/data/<source>/<sentiment>/<count>
 ```
 The above mentioned **<source>**, **<sentiment>** and **<count>** are place holder for their relevent options. Below are the options corresponding to these place holders.
-##### <source> -> facebook, instagram, thread, twitter, all.
-##### <sentiment> -> positive, negative
-##### <count> -> number of data required
+##### source -> facebook, instagram, thread, twitter, all.
+##### sentiment -> positive, negative
+##### count -> number of data required
 *Note: The URL are case sensitive*
 #### Example URL ( Method - GET )
 ```
