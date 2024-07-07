@@ -6,7 +6,7 @@ This one is the backend for that application.
 ## Prerequisite
 - Your should have Node.js installed in your system.
 - NPM is required to install dependencies
-- GIT has to be installed for git commands
+- GIT has to be installed to run git commands
 
 ## How to install?
 This backend is not hosted in live server. To use it, you will have to install in your local mechine and run it. Follow the following steps to install in your local.
@@ -25,3 +25,21 @@ To run the server,
 ```
 node app.js
 ```
+## APIs
+Once you have hosted your server. There are total 6 APIs that can be accessed from client side. Here is the break down of each of them and use cases.
+
+### API for checking server status.
+This API can be used to see if the server is online.
+```
+http://localhost:3000/
+```
+It returns a json file similer to below,
+```
+// If the server is active
+{ status: "server is actively listening" }
+```
+```
+// If there is any error
+{ error: "something is not right" }
+```
+You may have to see the console for more information about the error.

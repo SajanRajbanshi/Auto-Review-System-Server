@@ -229,7 +229,7 @@ app.get("/", async (req, res) => {
     res.status(200).send({ status: "server is actively listening" });
   } catch (err) {
     console.log("application having issue", err);
-    res.status(500).send({ error: "server not active" });
+    res.status(500).send({ error: "something is not right" });
   }
 });
 
