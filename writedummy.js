@@ -38,9 +38,9 @@ async function readProcessedData() {
   const readDB = await mongoose.createConnection(processedDataUri).asPromise();
   const collect = readDB.db.collection("processeddatas");
   const dataArray = await collect.find({}).toArray();
+  dataArray.sort(()=>{return Math.random()-0.5});
   await writeContentData(dataArray);
-  console.log(dataArray.length);
+  // console.log(dataArray);
   console.log("write complete");
 }
-
-readData();
+readProcessedData();

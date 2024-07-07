@@ -16,6 +16,9 @@ const userUri =
 const contentUri =
   "mongodb+srv://sajanrajbanshi:papjpmmw@cluster0.cazp6l4.mongodb.net/content";
 
+const processedContentUri =
+  "mongodb+srv://sajanrajbanshi:papjpmmw@cluster0.cazp6l4.mongodb.net/ProcessedContent";
+
 const Schema = mongoose.Schema;
 const contentDataSchema = new Schema({
   id: Number,
@@ -36,10 +39,55 @@ const userDataSchema = new Schema({
   password: String,
 });
 
+const contentSchema = new Schema({
+  id: Number,
+  caption: String,
+  comments: Array,
+  positive: Number,
+  negative: Number,
+  source: String,
+  ratio: Number,
+});
+
 async function analyse(text) {
   return await SentimentAnalyser.SentimentIntensityAnalyzer.polarity_scores(
     text
   );
+}
+
+async function readProcessedContent() {
+  const readDB = await mongoose
+    .createConnection(processedContentUri)
+    .asPromise();
+  const collect = readDB.db.collection("contents");
+  const dataArray = await collect.find({}).toArray();
+  return dataArray;
+}
+
+async function writeProcessedContentData(dataArray) {
+  const writeDB = await mongoose
+    .createConnection(processedContentUri)
+    .asPromise();
+  const contentData = writeDB.model("content", contentSchema);
+  await dataArray.forEach(async (item) => {
+    let positive_comments = item.comments.filter((comment) => {
+      return comment.sentiment > 0;
+    });
+    let negative_comments = item.comments.filter((comment) => {
+      return comment.sentiment < 0;
+    });
+    const newContent = new contentData({
+      id: item.id,
+      caption: item.caption,
+      comments: item.comments,
+      positive: positive_comments.length,
+      negative: negative_comments.length,
+      source: item.comments[0].source,
+      ratio: positive_comments.length / negative_comments.length,
+    });
+    await newContent.save();
+  });
+  console.log("data wrote");
 }
 
 async function isUserNameAvailable(username) {
@@ -221,6 +269,54 @@ app.get("/api/data/all", async (req, res) => {
     let dataArray = await readProcessedData();
     res.status(200).send(dataArray);
   } catch (err) {
+    res.status(400).send({ error: err });
+  }
+});
+
+app.get("/api/data/daily", async (req, res) => {
+  try {
+    let uniqueDates = new Set();
+    const dataArray = await readProcessedData();
+    await dataArray.forEach((item) => uniqueDates.add(item.date.toString()));
+    let resData = [];
+    uniqueDates.forEach((date) => {
+      let positive = 0;
+      let negative = 0;
+      dataArray.forEach((item) => {
+        if (item.date.toString() === date) {
+          if (item.sentiment > 0) {
+            positive += 1;
+          } else {
+            negative += 1;
+          }
+        }
+      });
+      resData.push({
+        date: new Date(date),
+        positive: positive,
+        negative: negative,
+      });
+    });
+    resData.sort((a, b) => {
+      return b.date - a.date;
+    });
+    res.status(200).send(resData);
+  } catch (err) {
+    console.log("error in data/daily api", err);
+    res.status(400).send({ error: err });
+  }
+});
+
+app.get("/api/data/top-content", async (req, res) => {
+  try {
+    const dataArray = await readProcessedContent();
+    res.status(200).send(
+      dataArray.sort((a, b) => {
+        return a.ratio - b.ratio;
+      })
+    );
+  } catch (err) {
+    console.log("error in data top-content api", err);
     res.status(400).send({ error: err });
   }
 });
