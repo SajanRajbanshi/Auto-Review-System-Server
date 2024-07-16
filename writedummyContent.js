@@ -51,5 +51,3 @@ async function readContent() {
   await writeContentData(dataArray);
   console.log("write complete");
 }
-
-readContent();

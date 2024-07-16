@@ -4,20 +4,21 @@ const SentimentAnalyser = require("vader-sentiment");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const bodyparser = require("body-parser");
+require('dotenv').config();
 
-const commentsUri =
-  "mongodb+srv://sajanrajbanshi:papjpmmw@cluster0.cazp6l4.mongodb.net/comments";
-const processedDataUri =
-  "mongodb+srv://sajanrajbanshi:papjpmmw@cluster0.cazp6l4.mongodb.net/ProcessedData";
+const commentsUri = process.env.COMMENTS_URI;
+  
+const processedDataUri =process.env.PROCESSED_DATA_URI;
+  
 
-const userUri =
-  "mongodb+srv://sajanrajbanshi:papjpmmw@cluster0.cazp6l4.mongodb.net/users";
+const userUri = process.env.USER_URI;
+  
 
-const contentUri =
-  "mongodb+srv://sajanrajbanshi:papjpmmw@cluster0.cazp6l4.mongodb.net/content";
+const contentUri = process.env.CONTENT_URI;
+  
 
-const processedContentUri =
-  "mongodb+srv://sajanrajbanshi:papjpmmw@cluster0.cazp6l4.mongodb.net/ProcessedContent";
+const processedContentUri =process.env.PROCESSED_CONTENT_URI;
+ 
 
 const Schema = mongoose.Schema;
 const contentDataSchema = new Schema({
@@ -328,12 +329,10 @@ app.post("/auth/signup", async (req, res) => {
     let email = req.body.email;
     let userInfo = { email: email, username: username, password: password };
     let status = await writeUserData(userInfo);
-    if (status===true) {
+    if (status === true) {
       res.status(200).send({ status: status });
-    }
-    else
-    {
-      res.status(200).send({status:status});
+    } else {
+      res.status(200).send({ status: status });
     }
   } catch (err) {
     console.log("error in signup api", err);

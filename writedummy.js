@@ -43,4 +43,3 @@ async function readProcessedData() {
   // console.log(dataArray);
   console.log("write complete");
 }
-readProcessedData();
