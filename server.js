@@ -356,10 +356,6 @@ app.post("/auth/signin", async (req, res) => {
   }
 });
 
-app.listen(3000, (err) => {
-  if (err) {
-    console.log(err);
-    return;
-  }
-  console.log(`listening in ${3000}`);
-});
+
+module.exports=app
+
