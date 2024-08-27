@@ -7,4 +7,29 @@ const ProcessedDataSchema = new Schema({
   source: String,
   date: Date,
 });
-module.exports = ProcessedDataSchema;
+
+const contentDataSchema = new Schema({
+  id: Number,
+  caption: String,
+  comments: Array,
+});
+
+const userDataSchema = new Schema({
+  email: String,
+  username: String,
+  password: String,
+});
+
+const contentSchema = new Schema({
+  id: Number,
+  caption: String,
+  comments: Array,
+  positive: Number,
+  negative: Number,
+  source: String,
+  ratio: Number,
+});
+
+
+
+module.exports = {ProcessedDataSchema,contentDataSchema,userDataSchema,contentSchema};

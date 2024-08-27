@@ -6,6 +6,9 @@ const cors = require("cors");
 const bodyparser = require("body-parser");
 require('dotenv').config();
 
+
+const {ProcessedDataSchema,contentDataSchema,userDataSchema,contentSchema}=require("./schema.js")
+
 const commentsUri = process.env.COMMENTS_URI;
   
 const processedDataUri =process.env.PROCESSED_DATA_URI;
@@ -20,35 +23,11 @@ const contentUri = process.env.CONTENT_URI;
 const processedContentUri =process.env.PROCESSED_CONTENT_URI;
  
 
-const Schema = mongoose.Schema;
-const contentDataSchema = new Schema({
-  id: Number,
-  caption: String,
-  comments: Array,
-});
 
-const ProcessedDataSchema = new Schema({
-  message: String,
-  sentiment: Number,
-  source: String,
-  date: Date,
-});
 
-const userDataSchema = new Schema({
-  email: String,
-  username: String,
-  password: String,
-});
 
-const contentSchema = new Schema({
-  id: Number,
-  caption: String,
-  comments: Array,
-  positive: Number,
-  negative: Number,
-  source: String,
-  ratio: Number,
-});
+
+
 
 async function analyse(text) {
   return await SentimentAnalyser.SentimentIntensityAnalyzer.polarity_scores(
