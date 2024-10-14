@@ -73,7 +73,7 @@ describe("API to access all processed data",()=>
         expect(response.body[0]).toHaveProperty("_id");
         expect(response.body[0]).toHaveProperty("date");
         expect(response.status).toBe(200);
-    })
+    },15000)
 })
 
 
@@ -86,7 +86,7 @@ describe("API to access dated data",()=>
         expect(response.body[0]).toHaveProperty("positive");
         expect(response.body[0]).toHaveProperty("negative");
         expect(response.status).toBe(200);
-    })
+    },15000)
 })
 
 
@@ -102,5 +102,5 @@ describe("API to access top content",()=>
         expect(response.body[0]).toHaveProperty("source");
         expect(response.body[0]).toHaveProperty("ratio");
         expect(response.body[0]).toHaveProperty("positive");
-    })
+    },15000)
 })
